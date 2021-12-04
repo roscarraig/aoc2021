@@ -7,7 +7,7 @@ int most(int *numbers, int pos, int len, int count)
   int ones = 0, mask = 1 << (len - pos - 1), i;
 
   for(i = 0; i < count; i++)
-    if(mask & numbers[i] == mask)
+    if((mask & numbers[i]) == mask)
       ones++;
   if(ones * 2 >= count)
     return(1);
@@ -19,11 +19,44 @@ int least(int *numbers, int pos, int len, int count)
   int ones = 0, mask = 1 << (len - pos - 1), i;
 
   for(i = 0; i < count; i++)
-    if(mask & numbers[i] == mask)
+    if((mask & numbers[i]) == mask)
       ones++;
   if(ones * 2 < count)
     return(1);
   return(0);
+}
+
+int filter(int *numbers, int width, int bit, int count)
+{
+  int *c1 = malloc(count * sizeof(int));
+  int *c2 = malloc(count * sizeof(int));
+  int  value = 0, i, j, k, cbit, count2;
+
+  memcpy(c1, numbers, count * sizeof(int));
+
+  for(i = 0; i < width; i++)
+  {
+    count2 = 0;
+    if(bit)
+      cbit = most(c1, i, width, count) << (width - i - 1);
+    else
+      cbit = least(c1, i, width, count) << (width - i - 1);
+    value += cbit;
+
+    for(j = 0; j < count;j++)
+    {
+      if((c1[j] & (1 << (width - i - 1))) == cbit)
+      {
+        c2[count2++] = c1[j];
+      }
+    }
+    memcpy(c1, c2, count2 * sizeof(int));
+    count = count2;
+
+    if(count == 1)
+      return(c1[0]);
+  }
+  return(value);
 }
 
 int main(int argc, char **argv)
@@ -33,7 +66,7 @@ int main(int argc, char **argv)
   int   count = 0, i, width = 0, gamma = 0, epsilon = 0;
   int  *numbers;
 
-  while (fgets(buffer, 256, fp))
+  while (fgets(buffer, 16, fp))
     count++;
 
   rewind(fp);
@@ -43,7 +76,7 @@ int main(int argc, char **argv)
   {
     int j;
 
-    fgets(buffer, 256, fp);
+    fgets(buffer, 16, fp);
 
     if(width == 0)
       width = strlen(buffer) - 1;
@@ -54,9 +87,7 @@ int main(int argc, char **argv)
       if(buffer[j] == '1')
         numbers[i]++;
     }
-    printf("%d ", numbers[i]);
   }
-  printf("\n");
   for(i = 0; i < width; i++)
   {
     gamma *= 2;
@@ -64,6 +95,6 @@ int main(int argc, char **argv)
     gamma += most(numbers, i, width, count);
     epsilon += least(numbers, i, width, count);
   }
-  printf("Part 1 %d %d\n", gamma, epsilon);
   printf("Part 1 %d\n", gamma * epsilon);
+  printf("Part 2 %d\n", filter(numbers, width, 1, count) * filter(numbers, width, 0, count));
 }
