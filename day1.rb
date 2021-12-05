@@ -1,4 +1,4 @@
-input = File.read(ARGV[0]).split.map(&:to_i)
+input = File.read(ARGV[0]).split.map(&:to_s)
 part1 = 0
 part2 = 0
 for i in 1..(input.length - 1)
