@@ -17,9 +17,8 @@ def main():
     shoal = [0] * 9
     for fish in start:
         shoal[fish] += 1
-    print(shoal)
 
-    for _ in range(80):
+    for i in range(80):
         generation(shoal)
     print("Part 1", sum(shoal))
     for _ in range(256 - 80):
