@@ -3,6 +3,16 @@
 use strict;
 use warnings;
 
+sub generation
+{
+  my $shoalref = $_[0];
+  my $x = shift @$shoalref;
+  push @$shoalref, 0;
+  $shoalref->[6] += $x;
+  $shoalref->[8] += $x;
+  return $x;
+}
+
 open FIN, '<'.$ARGV[0];
 my $line = <FIN>;
 chomp $line;
@@ -14,19 +24,11 @@ foreach (split /,/, $line) {
 }
 for (1..80)
 {
-  my $x = shift @shoal;
-  push @shoal, 0;
-  $shoal[6] += $x;
-  $shoal[8] += $x;
-  $total += $x;
+  $total += generation \@shoal;
 }
 print("Part 1: ", $total, "\n");
 for (81..256)
 {
-  my $x = shift @shoal;
-  push @shoal, 0;
-  $shoal[6] += $x;
-  $shoal[8] += $x;
-  $total += $x;
+  $total += generation \@shoal;
 }
-print("Part 1: ", $total, "\n");
+print("Part 2: ", $total, "\n");
