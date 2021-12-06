@@ -4,14 +4,30 @@ use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
 
+struct Card {
+    marked: Vec<u8>,
+    grid: [[u8; 5]; 5],
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    if let Ok(lines) = read_lines(&args[1])
+    if let Ok(mut lines) = read_lines(&args[1])
     {
-        for line in lines
-        {
-        }
+        println!("Hello!");
+        let pline = lines.next();
+        println!("{:?}", pline.unwrap());
+        // let parts = lines.next().unwrap().split(",");
+        // let calls = parts.collect::<Vec<&str>>();
+        // for item in calls
+        // {
+        //     println!("{}", item);
+        // }
+        // println!("=====");
+        // for line in lines
+        // {
+            // println!("{}", line.unwrap());
+        // }
     }
 }
 
