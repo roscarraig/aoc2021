@@ -21,7 +21,6 @@ def matches(src, dst):
 
 
 def parsepart2(line):
-    lookup = {}
     found = [''] * 10
     parts = line.strip().split(' | ')
     feed = [sortsegments(x) for x in parts[0].split(' ')]
@@ -34,7 +33,6 @@ def parsepart2(line):
         elif len(item) == 3:
             found[7] = item
         elif len(item) == 4:
-            lookup[item] = '4'
             found[4] = item
         elif len(item) == 7:
             found[8] = item
