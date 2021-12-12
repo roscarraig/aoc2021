@@ -4,25 +4,16 @@ import sys
 
 
 def step(grid, i, j):
+    if i < 0 or j < 0 or i > 9 or j > 9:
+        return
+
     grid[i][j] += 1
 
     if grid[i][j] == 10:
-        if i > 0:
-            step(grid, i - 1, j)
-            if j > 0:
-                step(grid, i - 1, j - 1)
-            if j < 9:
-                step(grid, i - 1, j + 1)
-        if i < 9:
-            step(grid, i + 1, j)
-            if j > 0:
-                step(grid, i + 1, j - 1)
-            if j < 9:
-                step(grid, i + 1, j + 1)
-        if j > 0:
-            step(grid, i, j - 1)
-        if j < 9:
-            step(grid, i, j + 1)
+        for di in range(3):
+            for dj in range(3):
+                if di != 1 or dj != 1:
+                    step(grid, i + di - 1, j + dj - 1)
 
 
 def generation(grid):
