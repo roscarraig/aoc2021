@@ -27,12 +27,13 @@ class Scanner(object):
         signs = [int(base[x] / abs(base[x])) for x in range(3)]
         base = [abs(x) - 1 for x in base]
 
-        return [[signs[0] * x[base[0]], signs[1] * x[base[1]], signs[2] * x[base[2]]] for x in self._beacons]
+        return [[signs[i] * x[base[i]] for i in range(3)] for x in self._beacons]
 
     def match_scan(self, candidate):
+        candlen = len(candidate) - 11
 
-        for i in range(len(self._beacons)):
-            for j in range(len(candidate)):
+        for i in range(len(self._beacons) - 11):
+            for j in range(candlen):
                 x = self._beacons[i][0] - candidate[j][0]
                 y = self._beacons[i][1] - candidate[j][1]
                 z = self._beacons[i][2] - candidate[j][2]
@@ -73,20 +74,22 @@ def main():
 
     while(len([x for x in scanners if x.done is False]) > 1):
         for i in range(count):
-            for j in range(i + 1, count):
-                if scanners[j].done:
-                    continue
-                for k in range(len(TRANSFORMS)):
-                    tra = scanners[j].transform(k)
-                    res = scanners[i].match_scan(tra)
+            match = True
+            while match:
+                match = False
+                for j in range(i + 1, count):
+                    if scanners[j].done:
+                        continue
+                    for k in range(len(TRANSFORMS)):
+                        tra = scanners[j].transform(k)
+                        res = scanners[i].match_scan(tra)
 
-                    if res:
-                        scanners[i].merge(tra, res)
-                        scanners[j].done = True
-                        scanners[j].rel = res
-                        print("Merged:", i, j)
-                        print(len(scanners[i]._beacons))
-                        break
+                        if res:
+                            scanners[i].merge(tra, res)
+                            scanners[j].done = True
+                            scanners[j].rel = res
+                            match = True
+                            break
     print("Part 1:", len(scanners[0]._beacons))
     scanners[0].rel = [0, 0, 0]
     part2 = 0
