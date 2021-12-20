@@ -6,21 +6,21 @@ import sys
 def window(image, x, y, pattern, flash):
     bits = ''
     space = '.#'[flash]
+
+    if pattern[0] == '.':
+        space = '.'
+
     result = 0
     width = len(image[0])
     depth = len(image)
+
     for j in range(-1, 2):
         for i in range(-1, 2):
-            if i + x < 0:
-                bits += space
-            elif i + x >= width:
-                bits += space
-            elif j + y < 0:
-                bits += space
-            elif j + y >= depth:
-                bits += space
-            else:
+            if 0 <= i + x < width and 0 <= j + y < depth:
                 bits += image[y + j][x + i]
+            else:
+                bits += space
+
     for x in bits:
         result *= 2
         if x == '#':
@@ -31,12 +31,8 @@ def window(image, x, y, pattern, flash):
 
 def count(image):
     result = 0
-    width = len(image[0])
     for j in range(len(image)):
-        for i in range(width):
-            x = image[j][i]
-            if x == '#':
-                result += 1
+        result += len(image[j].replace('.', ''))
     return result
 
 
@@ -54,11 +50,12 @@ def process(image, pattern, flash):
             result.pop(0)
         while result[-1].find('.') < 0:
             result.pop()
+        rlen = len(result)
         while '.' not in [x[0] for x in result]:
-            for i in range(len(result)):
+            for i in range(rlen):
                 result[i] = result[i][1:]
         while '.' not in [x[-1] for x in result]:
-            for i in range(len(result)):
+            for i in range(rlen):
                 result[i] = result[i][:-1]
 
     return result
