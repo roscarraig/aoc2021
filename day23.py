@@ -146,7 +146,6 @@ def attempt(cmap, score, seen):
 
 
 def main():
-    sys.setrecursionlimit(1000000)
     seen = {}
     cmap = []
     with open(sys.argv[1], 'r') as fhan:
